@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "yeen.land-homepage", "src\yeen.land-homepage\yeen.land-homepage.fsproj", "{728E3757-17FD-4A42-AB4A-A8C828F2C667}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "yeen.land", "src\yeen.land\yeen.land.fsproj", "{F776F5AD-1CB5-4C94-8BE9-8CC41C1E1D0A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D7B8E571-6814-42AB-9279-A55BBE4E4830}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{728E3757-17FD-4A42-AB4A-A8C828F2C667}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{728E3757-17FD-4A42-AB4A-A8C828F2C667}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{728E3757-17FD-4A42-AB4A-A8C828F2C667}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{728E3757-17FD-4A42-AB4A-A8C828F2C667}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F776F5AD-1CB5-4C94-8BE9-8CC41C1E1D0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F776F5AD-1CB5-4C94-8BE9-8CC41C1E1D0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F776F5AD-1CB5-4C94-8BE9-8CC41C1E1D0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F776F5AD-1CB5-4C94-8BE9-8CC41C1E1D0A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F776F5AD-1CB5-4C94-8BE9-8CC41C1E1D0A} = {D7B8E571-6814-42AB-9279-A55BBE4E4830}
+		{728E3757-17FD-4A42-AB4A-A8C828F2C667} = {D7B8E571-6814-42AB-9279-A55BBE4E4830}
+	EndGlobalSection
+EndGlobal
