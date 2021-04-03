@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
@@ -7,7 +7,7 @@
         <!-- This property makes the build directory similar to a publish directory and helps the AWS .NET Lambda Mock Test Tool find project dependencies. -->
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     </PropertyGroup>
-    
+
     <ItemGroup>
         <Compile Include="Function.fs" />
     </ItemGroup>
@@ -15,7 +15,7 @@
     <ItemGroup>
         <None Include="aws-lambda-tools-defaults.json" />
     </ItemGroup>
-    
+
     <ItemGroup>
         <ProjectReference Include="..\yeen.land\yeen.land.fsproj" />
     </ItemGroup>

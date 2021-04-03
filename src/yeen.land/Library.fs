@@ -99,13 +99,16 @@ let GenerateResponse (pageHtml: XmlNode) =
         return APIGatewayProxyResponse(Body = body, StatusCode = 200, Headers = headers)
     }
     
-let GenerateRandomPage () =
+let GenerateRandomUrl () =
     let request =
         ListObjectsV2Request(BucketName = "yeen.land")
-
+        
     request
     |> GetRandomBucketItem
     |> Reader.bind (GetObjectUrl request)
+    
+let GenerateRandomPage () =
+    GenerateRandomUrl ()
     |> Reader.map GeneratePage
     |> Reader.map GenerateResponse
 
