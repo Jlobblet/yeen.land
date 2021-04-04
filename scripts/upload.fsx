@@ -63,7 +63,14 @@ let s3Client = new AmazonS3Client(region)
 let uploadFile fp =
     printfn $"Uploading {fp}"
     let transfer = new TransferUtility(s3Client)
-    transfer.UploadAsync(fp, bucketName)
+
+    TransferUtilityUploadRequest(
+        BucketName = bucketName,
+        FilePath = fp,
+        StorageClass = S3StorageClass.Standard,
+        CannedACL = S3CannedACL.PublicRead
+    )
+    |> transfer.UploadAsync
     |> Async.AwaitTask
 
 globs
