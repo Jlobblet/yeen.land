@@ -19,7 +19,7 @@ type Arguments =
     | [<Unique>] BucketName of string
     | [<Unique>] RegionName of string
     | [<MainCommand; ExactlyOnce; Last>] Patterns of pattern: string list
-    
+
     interface IArgParserTemplate with
         member s.Usage =
             match s with
@@ -27,15 +27,16 @@ type Arguments =
             | RegionName _ -> "Region name the bucket is in"
             | Patterns _ -> "Glob patterns of files to upload"
 
-let parser = ArgumentParser.Create<Arguments>(programName = name)
+let parser =
+    ArgumentParser.Create<Arguments>(programName = name)
 
-if argv |> Array.isEmpty then    
-    parser.PrintUsage()
-    |> printfn "%s"
+if argv |> Array.isEmpty then
+    parser.PrintUsage() |> printfn "%s"
     exit 0
 
 let parseRegionName s =
     let region = RegionEndpoint.GetBySystemName s
+
     match Seq.contains region RegionEndpoint.EnumerableAllRegions with
     | false -> failwith (region.ToString())
     | true -> region
@@ -49,14 +50,12 @@ let region =
 let bucketName =
     results.GetResult(<@ BucketName @>, defaultValue = "yeen.land")
 
-let patterns =
-    results.GetResult(<@ Patterns @>)
+let patterns = results.GetResult(<@ Patterns @>)
 
 printfn $"Region: %A{region}"
 printfn $"Bucket: %s{bucketName}"
 
-let globs = 
-    List.fold (++) (!! "") patterns
+let globs = List.fold (++) (!! "") patterns
 
 let s3Client = new AmazonS3Client(region)
 
