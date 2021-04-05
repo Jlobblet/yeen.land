@@ -18,10 +18,9 @@ open SixLabors.ImageSharp
 open CoenM.ImageHash
 open CoenM.ImageHash.HashAlgorithms
 open yeenland
-
-// Constants
-[<Literal>]
-let tableName = "yeen.land"
+open yeenland.DynamoDB
+open yeenland.S3
+open yeenland.Services
 
 // Parsing
 
@@ -60,51 +59,24 @@ let bucketName =
     results.GetResult(<@ BucketName @>, defaultValue = "yeen.land")
 
 printfn $"Region: %A{region}"
-printfn $"Table name: %s{tableName}"
+printfn $"Table name: %s{TableName}"
 printfn $"Bucket name: %s{bucketName}"
 
 // Variables
 
-[<DynamoDBTable("yeen.land")>]
-[<StructuredFormatDisplay("{AsString}")>]
-type YeenLand() =
-    [<DynamoDBHashKey>]
-    member val S3Key: string = "" with get, set
-
-    member val Hash: uint64 = 0uL with get, set
-
-    member this.AsRecord = { S3Key = this.S3Key; Hash = this.Hash }
-    static member FromRecord { S3Key = s3Key; Hash = hash } = YeenLand(S3Key = s3Key, Hash = hash)
-
-    override this.ToString() = this.AsRecord.ToString()
-
-    member this.AsString = this.ToString()
-
-and YeenLandRecord =
-    { S3Key: string
-      Hash: uint64 }
-
-    member this.AsDynamo =
-        YeenLand(S3Key = this.S3Key, Hash = this.Hash)
-
-    static member FromDynamo(yl: YeenLand) = { S3Key = yl.S3Key; Hash = yl.Hash }
-
-
-let services =
-    new yeenland.Service(region) :> yeenland.IServices
-
-let context = new DynamoDBContext(services.DynamoDB)
+let services = new Service(region) :> IServices
 
 let hashAlgorithm = AverageHash() :> IImageHash
 
 let bucketContents =
     ListObjectsV2Request(BucketName = bucketName)
-    |> yeenland.GetBucketContents
+    |> GetBucketContents
     |> Reader.run
     <| services
 
 let tableContents =
-    let search = context.ScanAsync<YeenLand>([])
+    let search =
+        services.DynamoDBContext.ScanAsync<YeenLand>([])
 
     search.GetRemainingAsync()
     |> Async.AwaitTask
@@ -187,7 +159,7 @@ bucketContents
         printfn $"Adding %A{entry}"
 
         return!
-            context.SaveAsync<YeenLand>(entry)
+            services.DynamoDBContext.SaveAsync<YeenLand>(entry)
             |> Async.AwaitTask
     })
 |> Async.Parallel
@@ -216,7 +188,8 @@ let currentEntries =
                        |> Seq.map (fun k -> k :> obj)
                        |> Array.ofSeq))
 
-    context
+    services
+        .DynamoDBContext
         .ScanAsync<YeenLand>([| conditions |])
         .GetRemainingAsync()
     |> Async.AwaitTask
@@ -232,7 +205,7 @@ expectedEntries
 
     printfn $"Updating %A{entry}"
 
-    context.SaveAsync<YeenLand>(entry)
+    services.DynamoDBContext.SaveAsync<YeenLand>(entry)
     |> Async.AwaitTask)
 |> Async.Parallel
 |> Async.RunSynchronously
@@ -243,7 +216,7 @@ keysToRemove
 |> Seq.map (fun k ->
     printfn $"Deleting entry with key %s{k}"
 
-    context.DeleteAsync<YeenLand>(k)
+    services.DynamoDBContext.DeleteAsync<YeenLand>(k)
     |> Async.AwaitTask)
 |> Async.Parallel
 |> Async.RunSynchronously

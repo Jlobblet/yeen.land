@@ -1,0 +1,16 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  YeenLandApi:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: yeen.land-api::yeenland_api.Function::FunctionHandler
+      Runtime: dotnetcore3.1
+      Timeout: 60
+      Policies: AWSLambdaExecute
+      Events:
+        ApiEvent:
+          Type: HttpApi
+          Properties:
+            Path: /
+            Method: GET

@@ -63,12 +63,11 @@ let uploadFile fp =
     printfn $"Uploading {fp}"
     let transfer = new TransferUtility(s3Client)
 
-    TransferUtilityUploadRequest(
-        BucketName = bucketName,
-        FilePath = fp,
-        StorageClass = S3StorageClass.Standard,
-        CannedACL = S3CannedACL.PublicRead
-    )
+    TransferUtilityUploadRequest
+        (BucketName = bucketName,
+         FilePath = fp,
+         StorageClass = S3StorageClass.Standard,
+         CannedACL = S3CannedACL.PublicRead)
     |> transfer.UploadAsync
     |> Async.AwaitTask
 

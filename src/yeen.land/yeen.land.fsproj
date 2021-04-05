@@ -2,9 +2,13 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RootNamespace>yeenland</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
+        <Compile Include="Services.fs" />
+        <Compile Include="S3.fs" />
+        <Compile Include="DynamoDB.fs" />
         <Compile Include="Library.fs" />
     </ItemGroup>
 
