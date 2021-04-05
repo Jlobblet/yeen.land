@@ -1,25 +1,26 @@
 ﻿module yeenland.yeenland
 
 open System
-open System.IO
-open System.Net
 open Amazon
+open Amazon.DynamoDBv2
+open Amazon.Lambda.APIGatewayEvents
 open Amazon.S3
 open Amazon.S3.Model
-open Amazon.Lambda.APIGatewayEvents
 open FSharpPlus.Data
 open Giraffe.ViewEngine
-open Newtonsoft.Json
 
 type IServices =
     inherit IDisposable
     abstract Region: RegionEndpoint
+    abstract DynamoDB: IAmazonDynamoDB
     abstract S3: IAmazonS3
     abstract Random: Random
 
 type Service(Region: RegionEndpoint) =
     interface IServices with
         member this.Region = Region
+        member this.DynamoDB =
+            new AmazonDynamoDBClient((this :> IServices).Region) :> IAmazonDynamoDB
         member this.S3 =
             new AmazonS3Client((this :> IServices).Region) :> IAmazonS3
 
