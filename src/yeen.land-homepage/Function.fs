@@ -2,6 +2,7 @@ namespace yeenland_homepage
 
 open Amazon
 open Amazon.Lambda.Core
+open Amazon.Lambda.Serialization.SystemTextJson
 open Amazon.Lambda.APIGatewayEvents
 open FSharpPlus.Data
 open yeenland.Services
@@ -15,5 +16,5 @@ module Function =
         GenerateRandomPage() |> Reader.run <| services
         |> Async.StartAsTask
 
-    [<assembly:LambdaSerializer(typeof<Amazon.Lambda.Serialization.Json.JsonSerializer>)>]
+    [<assembly:LambdaSerializer(typeof<DefaultLambdaJsonSerializer>)>]
     do ()

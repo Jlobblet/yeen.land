@@ -3,17 +3,19 @@
 open Amazon
 open Amazon.Lambda.Core
 open Amazon.Lambda.APIGatewayEvents
+open Amazon.Lambda.Serialization.SystemTextJson
 open FSharpPlus.Data
 open Newtonsoft.Json
 open yeenland.Services
+open yeenland.Utils
 open yeenland.yeenland
 
 module Function =
     let private GenerateResponse (url: string) =
-        let body = [ "url", url ] |> dict
+        let body = [ "url", url ] |> ToDictionary
 
         let headers =
-            [ ("Content-Type", "application/json") ] |> dict
+            [ ("Content-Type", "application/json") ] |> ToDictionary
 
         async {
             return APIGatewayProxyResponse(Body = JsonConvert.SerializeObject body, StatusCode = 200, Headers = headers)
@@ -27,5 +29,5 @@ module Function =
         GenerateRandomUrl() |> Reader.run <| services
         |> GenerateResponse
 
-    [<assembly:LambdaSerializer(typeof<Amazon.Lambda.Serialization.Json.JsonSerializer>)>]
+    [<assembly:LambdaSerializer(typeof<DefaultLambdaJsonSerializer>)>]
     do ()

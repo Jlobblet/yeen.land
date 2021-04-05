@@ -6,6 +6,7 @@ open Giraffe.ViewEngine
 open yeenland.DynamoDB
 open yeenland.Services
 open yeenland.S3
+open yeenland.Utils
 
 let GetRandom items =
     let inner (services: IServices) =
@@ -44,7 +45,7 @@ let GenerateHtmlResponse (pageHtml: XmlNode) =
         pageHtml |> RenderView.AsString.htmlDocument
 
     let headers =
-        [ ("Content-Type", "text/html") ] |> dict
+        [ ("Content-Type", "text/html") ] |> ToDictionary
 
     async { return APIGatewayProxyResponse(Body = body, StatusCode = 200, Headers = headers) }
 
