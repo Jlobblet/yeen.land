@@ -27,7 +27,10 @@ module Function =
         let services =
             new Service(RegionEndpoint.EUWest2) :> IServices
 
-        GenerateRandomUrl() |> Reader.run <| services
+        GetRandomRecord()
+        |> Reader.bind GetRecordUrl
+        |> Reader.run
+        <| services
         |> GenerateResponse
 
     [<assembly: LambdaSerializer(typeof<DefaultLambdaJsonSerializer>)>]
