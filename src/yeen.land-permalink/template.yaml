@@ -1,0 +1,20 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: An AWS Serverless Specification template describing your function.
+Resources:
+  yeenlandpermalink:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: 'yeen.land-permalink::yeenland_permalink.Function::FunctionHandler'
+      Runtime: dotnetcore3.1
+      CodeUri: .
+      Description: ''
+      MemorySize: 256
+      Timeout: 30
+      Role: 'arn:aws:iam::055375062464:role/yeen.land'
+      Events:
+        Api1:
+          Type: Api
+          Properties:
+            Path: /id/{id}
+            Method: ANY

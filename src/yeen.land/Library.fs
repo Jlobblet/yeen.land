@@ -1,5 +1,7 @@
 ﻿module yeenland.yeenland
 
+open Amazon.DynamoDBv2.DataModel
+open Amazon.DynamoDBv2.DocumentModel
 open Amazon.Lambda.APIGatewayEvents
 open FSharpPlus.Data
 open Giraffe.ViewEngine
@@ -40,6 +42,26 @@ let GeneratePage imgSrc =
         ]
     ]
 
+let ``404 Page`` =
+    html [] [
+        header [] [
+            title [] [ str "yeen.land" ]
+            meta [ _property "og:type"
+                   _content "website" ]
+            style [] [
+                str
+                    ".center-text{height:100px;line-height:100px;text-align:center;}.inline-box{display:inline-block;vertical-align:middle;line-height:normal}"
+            ]
+        ]
+        body [] [
+            div [ _class "center-text" ] [
+                str "404"
+            ]
+        ]
+    ]
+
+let ``404 Page Reader``: Reader<IServices, XmlNode> = ``404 Page`` |> Reader.Return<_, _>
+
 let GenerateHtmlResponse (pageHtml: XmlNode) =
     let body =
         pageHtml |> RenderView.AsString.htmlDocument
@@ -61,3 +83,24 @@ let GenerateRandomPage () =
     GenerateRandomUrl()
     |> Reader.map GeneratePage
     |> Reader.map GenerateHtmlResponse
+
+let GetPageFromHash (_hash: uint64) =
+    let conditions =
+        ScanCondition("Hash", ScanOperator.Equal, _hash :> obj)
+        |> Array.singleton
+
+    conditions
+    |> GetTableContents
+    |> Reader.map Seq.tryHead
+    |> Reader.bind (function
+        | Some yl ->
+            yl.S3Key
+            |> GetObjectUrl BucketName
+            |> Reader.map GeneratePage
+        | None -> ``404 Page Reader``)
+    |> Reader.map GenerateHtmlResponse
+
+let TryGetPageFromHash =
+    Option.fold (fun _ -> GetPageFromHash)
+        (``404 Page Reader``
+         |> Reader.map GenerateHtmlResponse)

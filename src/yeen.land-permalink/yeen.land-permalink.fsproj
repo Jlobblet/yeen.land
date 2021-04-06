@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RootNamespace>yeenland_permalink</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Include="Function.fs" />
+        <None Include="aws-lambda-tools-defaults.json" />
+        <Content Include="template.yaml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\yeen.land\yeen.land.fsproj" />
+    </ItemGroup>
+
+</Project>
