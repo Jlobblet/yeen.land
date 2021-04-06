@@ -7,7 +7,6 @@ open Amazon.Lambda.Core
 open Amazon.Lambda.S3Events
 open Amazon.Lambda.Serialization.SystemTextJson
 open Amazon.S3.Model
-open Amazon.S3.Util
 open FSharpPlus.Data
 open yeenland
 open yeenland.DynamoDB
