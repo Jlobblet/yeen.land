@@ -1,0 +1,13 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  YeenLandS3Push:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: yeen.land-on-s3-push::yeenland_on_s3_push.Function::FunctionHandler
+      Runtime: dotnetcore3.1
+      Timeout: 60
+      Policies: AWSLambdaExecute
+      Events:
+        S3Event:
+          Type: S3

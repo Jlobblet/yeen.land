@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RootNamespace>yeenland_on_s3_push</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Include="Function.fs" />
+        <None Include="aws-lambda-tools-defaults.json" />
+        <None Include="template.yaml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\yeen.land\yeen.land.fsproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Amazon.Lambda.S3Events" Version="2.0.1" />
+    </ItemGroup>
+
+</Project>
