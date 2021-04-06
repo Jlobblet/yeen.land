@@ -45,24 +45,26 @@ module Function =
             |> Array.partition snd
             ||> fun d k -> Array.map fst d, Array.map fst k
 
-        addToDatabaseItems
-        |> Array.map
-            (fun yl ->
-                services.DynamoDBContext.SaveAsync<YeenLand>(yl.AsDynamo)
-                |> Async.AwaitTask)
-        |> Async.Parallel
-        |> Async.RunSynchronously
-        |> ignore
+        if not << Seq.isEmpty <| addToDatabaseItems then
+            addToDatabaseItems
+            |> Array.map
+                (fun yl ->
+                    services.DynamoDBContext.SaveAsync<YeenLand>(yl.AsDynamo)
+                    |> Async.AwaitTask)
+            |> Async.Parallel
+            |> Async.RunSynchronously
+            |> ignore
 
-        let deleteRequest = DeleteObjectsRequest(BucketName = BucketName)
+        if not << Seq.isEmpty <| deleteItems then
+            let deleteRequest = DeleteObjectsRequest(BucketName = BucketName)
 
-        deleteItems
-        |> Array.iter (fun yl -> deleteRequest.AddKey yl.S3Key)
+            deleteItems
+            |> Array.iter (fun yl -> deleteRequest.AddKey yl.S3Key)
 
-        services.S3.DeleteObjectsAsync deleteRequest
-        |> Async.AwaitTask
-        |> Async.RunSynchronously
-        |> ignore
+            services.S3.DeleteObjectsAsync deleteRequest
+            |> Async.AwaitTask
+            |> Async.RunSynchronously
+            |> ignore
 
     [<assembly: LambdaSerializer(typeof<DefaultLambdaJsonSerializer>)>]
     do ()
