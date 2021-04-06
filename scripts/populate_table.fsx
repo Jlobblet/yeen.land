@@ -150,20 +150,19 @@ let getImageHashFromS3 bucket key alg =
 
 bucketContents
 |> Seq.filter (fun object -> keysToAdd.Contains object.Key)
-|> Seq.map
-    (fun object ->
-        async {
-            let! imageHash = getImageHashFromS3 bucketName object.Key hashAlgorithm
+|> Seq.map (fun object ->
+    async {
+        let! imageHash = getImageHashFromS3 bucketName object.Key hashAlgorithm
 
-            let entry =
-                { S3Key = object.Key; Hash = imageHash }.AsDynamo
+        let entry =
+            { S3Key = object.Key; Hash = imageHash }.AsDynamo
 
-            printfn $"Adding %A{entry}"
+        printfn $"Adding %A{entry}"
 
-            return!
-                services.DynamoDBContext.SaveAsync<YeenLand>(entry)
-                |> Async.AwaitTask
-        })
+        return!
+            services.DynamoDBContext.SaveAsync<YeenLand>(entry)
+            |> Async.AwaitTask
+    })
 |> Async.Parallel
 |> Async.RunSynchronously
 
@@ -172,26 +171,23 @@ bucketContents
 let expectedEntries =
     bucketContents
     |> Seq.filter (fun object -> keysToUpdate.Contains object.Key)
-    |> Seq.map
-        (fun object ->
-            async {
-                let! imageHash = getImageHashFromS3 bucketName object.Key hashAlgorithm
-                return object.Key, imageHash
-            })
+    |> Seq.map (fun object ->
+        async {
+            let! imageHash = getImageHashFromS3 bucketName object.Key hashAlgorithm
+            return object.Key, imageHash
+        })
     |> Async.Parallel
     |> Async.RunSynchronously
     |> Map.ofArray
 
 let currentEntries =
     let conditions =
-        ScanCondition(
-            "S3Key",
-            ScanOperator.In,
-            values =
-                (keysToUpdate
-                 |> Seq.map (fun k -> k :> obj)
-                 |> Array.ofSeq)
-        )
+        ScanCondition
+            ("S3Key",
+             ScanOperator.In,
+             values = (keysToUpdate
+                       |> Seq.map (fun k -> k :> obj)
+                       |> Array.ofSeq))
 
     services
         .DynamoDBContext
@@ -204,26 +200,24 @@ let currentEntries =
 
 expectedEntries
 |> Map.filter (fun k v -> currentEntries.[k] <> v)
-|> Seq.map
-    (fun kvp ->
-        let entry =
-            { S3Key = kvp.Key; Hash = kvp.Value }.AsDynamo
+|> Seq.map (fun kvp ->
+    let entry =
+        { S3Key = kvp.Key; Hash = kvp.Value }.AsDynamo
 
-        printfn $"Updating %A{entry}"
+    printfn $"Updating %A{entry}"
 
-        services.DynamoDBContext.SaveAsync<YeenLand>(entry)
-        |> Async.AwaitTask)
+    services.DynamoDBContext.SaveAsync<YeenLand>(entry)
+    |> Async.AwaitTask)
 |> Async.Parallel
 |> Async.RunSynchronously
 
 // Removing entries
 
 keysToRemove
-|> Seq.map
-    (fun k ->
-        printfn $"Deleting entry with key %s{k}"
+|> Seq.map (fun k ->
+    printfn $"Deleting entry with key %s{k}"
 
-        services.DynamoDBContext.DeleteAsync<YeenLand>(k)
-        |> Async.AwaitTask)
+    services.DynamoDBContext.DeleteAsync<YeenLand>(k)
+    |> Async.AwaitTask)
 |> Async.Parallel
 |> Async.RunSynchronously
