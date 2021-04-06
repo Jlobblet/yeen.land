@@ -7,8 +7,15 @@
 
     <ItemGroup>
         <Compile Include="Function.fs" />
-        <None Include="aws-lambda-tools-defaults.json" />
-        <Content Include="template.yaml" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <Content Include="aws-lambda-tools-defaults.json">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="template.yaml">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
 
     <ItemGroup>
