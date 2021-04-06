@@ -6,6 +6,7 @@ open Amazon.Lambda.APIGatewayEvents
 open Amazon.Lambda.Serialization.SystemTextJson
 open FSharpPlus.Data
 open Newtonsoft.Json
+open yeenland.DynamoDB
 open yeenland.Services
 open yeenland.Utils
 open yeenland.yeenland
