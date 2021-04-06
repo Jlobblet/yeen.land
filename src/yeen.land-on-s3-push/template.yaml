@@ -1,13 +1,24 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Transform: AWS::Serverless-2016-10-31
+Transform: 'AWS::Serverless-2016-10-31'
+Description: An AWS Serverless Specification template describing your function.
 Resources:
-  YeenLandS3Push:
-    Type: AWS::Serverless::Function
+  yeenlandons3push:
+    Type: 'AWS::Serverless::Function'
     Properties:
-      Handler: yeen.land-on-s3-push::yeenland_on_s3_push.Function::FunctionHandler
+      Handler: 'yeen.land-on-s3-push::yeenland_on_s3_push.Function::FunctionHandler'
       Runtime: dotnetcore3.1
-      Timeout: 60
-      Policies: AWSLambdaExecute
+      CodeUri: .
+      Description: ''
+      MemorySize: 256
+      Timeout: 30
+      Role: 'arn:aws:iam::055375062464:role/yeen.land'
       Events:
-        S3Event:
+        BucketEvent1:
           Type: S3
+          Properties:
+            Bucket:
+              Ref: Bucket1
+            Events:
+              - 's3:ObjectCreated:*'
+  Bucket1:
+    Type: 'AWS::S3::Bucket'

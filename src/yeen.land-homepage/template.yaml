@@ -1,16 +1,20 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Transform: AWS::Serverless-2016-10-31
+Transform: 'AWS::Serverless-2016-10-31'
+Description: An AWS Serverless Specification template describing your function.
 Resources:
-  YeenLandHomepage:
-    Type: AWS::Serverless::Function
+  yeenlandhomepage:
+    Type: 'AWS::Serverless::Function'
     Properties:
-      Handler: yeen.land-homepage::yeenland_homepage.Function::FunctionHandler
+      Handler: 'yeen.land-homepage::yeenland_homepage.Function::FunctionHandler'
       Runtime: dotnetcore3.1
-      Timeout: 60
-      Policies: AWSLambdaExecute
+      CodeUri: .
+      Description: ''
+      MemorySize: 256
+      Timeout: 30
+      Role: 'arn:aws:iam::055375062464:role/yeen.land'
       Events:
-        HomepageEvent:
-          Type: HttpApi
+        Api1:
+          Type: Api
           Properties:
             Path: /
-            Method: GET
+            Method: ANY
