@@ -1,0 +1,37 @@
+version: 0.2
+
+env:
+  variables:
+    SOLUTION: .\yeen.land.sln
+    PACKAGE_DIRECTORY: .\packages
+
+phases:
+  install:
+    - echo Installing dependencies...
+    - apt-get update -y
+    - wget https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+    - dpkg -i packages-microsoft-prod.deb
+    - apt-get install -y apt-transport-https dotnet-sdk-5.0"
+  build:
+    tools:
+      - echo Running build tasks...
+      - dotnet tool restore
+    package_api:
+      - cd ./src/yeen.land-api/
+      - dotnet lambda package
+    package_homepage:
+      - cd ./src/yeen.land-homepage/
+      - dotnet lambda package
+    package_on_s3_push:
+      - cd ./src/yeen.land-on-s3-push/
+      - dotnet lambda package
+    package_permalink:
+      - cd ./src/yeen.land-permalink/
+      - dotnet lambda package
+      
+artifacts:
+  files:
+    - ./src/yeen.land-api/bin/Release/netcoreapp3.1/yeen.land-api.zip
+    - ./src/yeen.land-homepage/bin/Release/netcoreapp3.1/yeen.land-homepage.zip
+    - ./src/yeen.land-on-s3-push/bin/Release/netcoreapp3.1/yeen.land-on-s3-push.zip
+    - ./src/yeen.land-permalink/bin/Release/netcoreapp3.1/yeen.land-permalink.zip
