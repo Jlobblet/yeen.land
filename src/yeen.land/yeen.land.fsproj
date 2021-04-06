@@ -19,9 +19,11 @@
       <PackageReference Include="Amazon.Lambda.Serialization.SystemTextJson" Version="2.1.0" />
       <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.0.8" />
       <PackageReference Include="AWSSDK.S3" Version="3.7.0.8" />
+      <PackageReference Include="CoenM.ImageSharp.ImageHash" Version="1.0.0" />
       <PackageReference Include="FSharpPlus" Version="1.1.7" />
       <PackageReference Include="Giraffe.ViewEngine" Version="1.2.0" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+      <PackageReference Include="SixLabors.ImageSharp" Version="1.0.3" />
     </ItemGroup>
 
 </Project>

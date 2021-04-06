@@ -16,5 +16,5 @@ module Function =
         GenerateRandomPage() |> Reader.run <| services
         |> Async.StartAsTask
 
-    [<assembly:LambdaSerializer(typeof<DefaultLambdaJsonSerializer>)>]
+    [<assembly: LambdaSerializer(typeof<DefaultLambdaJsonSerializer>)>]
     do ()

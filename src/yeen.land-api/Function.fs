@@ -15,7 +15,8 @@ module Function =
         let body = [ "url", url ] |> ToDictionary
 
         let headers =
-            [ ("Content-Type", "application/json") ] |> ToDictionary
+            [ ("Content-Type", "application/json") ]
+            |> ToDictionary
 
         async {
             return APIGatewayProxyResponse(Body = JsonConvert.SerializeObject body, StatusCode = 200, Headers = headers)
@@ -29,5 +30,5 @@ module Function =
         GenerateRandomUrl() |> Reader.run <| services
         |> GenerateResponse
 
-    [<assembly:LambdaSerializer(typeof<DefaultLambdaJsonSerializer>)>]
+    [<assembly: LambdaSerializer(typeof<DefaultLambdaJsonSerializer>)>]
     do ()
