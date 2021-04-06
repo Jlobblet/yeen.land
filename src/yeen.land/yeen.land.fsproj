@@ -10,6 +10,7 @@
         <Compile Include="S3.fs" />
         <Compile Include="DynamoDB.fs" />
         <Compile Include="Utils.fs" />
+        <Compile Include="Html.fs" />
         <Compile Include="Library.fs" />
     </ItemGroup>
 

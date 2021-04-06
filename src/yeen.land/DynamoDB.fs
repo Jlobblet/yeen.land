@@ -2,6 +2,7 @@ module yeenland.DynamoDB
 
 open Amazon.DynamoDBv2.DataModel
 open FSharpPlus.Data
+open yeenland.S3
 open yeenland.Services
 
 [<Literal>]
@@ -42,3 +43,5 @@ let GetTableContents conditions =
         |> Seq.map YeenLandRecord.FromDynamo
 
     inner |> Reader
+
+let GetRecordUrl yl = GetObjectUrl BucketName yl.S3Key
