@@ -48,17 +48,14 @@ let GeneratePage (yl: YeenLandRecord) =
                 ]
             ]
             main [] [
-                body [] [
-                    div [ _class "imgbox" ] [
-                        img [ _class "center-fit"; _src imgSrc ]
-                    ]
-                    a [ _href permalink ] [
-                        str "Permalink"
-                    ]
-                    str " "
-                    a [ _href random ] [ str "Random" ]
-
+                div [ _class "imgbox" ] [
+                    img [ _class "center-fit"; _src imgSrc ]
                 ]
+                a [ _href permalink ] [
+                    str "Permalink"
+                ]
+                str " "
+                a [ _href random ] [ str "Random" ]
             ]
         ]
 
@@ -76,16 +73,12 @@ let ``404 Page`` =
             ]
         ]
         main [] [
-            body [] [
-                div [ _class "center-text" ] [
-                    str "404"
-                ]
+            div [ _class "center-text" ] [
+                str "404"
             ]
         ]
         footer [] [
-            body [] [
-                a [ _href random ] [ str "Random" ]
-            ]
+            a [ _href random ] [ str "Random" ]
         ]
     ]
     |> Reader.Return<_, _>
