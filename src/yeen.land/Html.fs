@@ -36,7 +36,7 @@ let GeneratePage (yl: YeenLandRecord) =
         let random = "https://yeen.land"
 
         html [] [
-            header [] [
+            head [] [
                 meta [ _charset "UTF-8" ]
                 meta [ _property "og:type"
                        _content "website" ]
@@ -64,7 +64,7 @@ let GeneratePage (yl: YeenLandRecord) =
 let ``404 Page`` =
     let random = "https://yeen.land"
     html [] [
-        header [] [
+        head [] [
             title [] [ str "yeen.land" ]
             meta [ _property "og:type"
                    _content "website" ]
