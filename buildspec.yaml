@@ -20,17 +20,13 @@ phases:
     commands:
       - echo Running build tasks...
       - dotnet tool restore
-      - pushd ./src/
-      - pushd ./yeen.land-api/
+      - cd ./src/yeen.land-api/
       - dotnet lambda deploy-function
-      - popd
-      - pushd ./yeen.land-homepage/
+      - cd ../yeen.land-homepage/
       - dotnet lambda deploy-function
-      - popd
-      - pushd ./yeen.land-on-s3-push/
+      - cd ../yeen.land-on-s3-push/
       - dotnet lambda deploy-function
-      - popd
-      - pushd ./yeen.land-permalink/
+      - cd ../yeen.land-permalink/
       - dotnet lambda deploy-function
     finally:
       - echo Build phase complete
