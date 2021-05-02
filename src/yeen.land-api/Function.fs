@@ -48,13 +48,18 @@ module Function =
 
         pathParameters
         |> Map.tryFind "id"
-        |> Option.bind TryParseUInt64
-        |> Option.map (
-            TryGetRecordFromHash
-            >> Reader.bind (Option.fold (fun _ -> Reader.Return<_, _>) (GetRandomRecord()))
-            >> Reader.bind GetRecordUrl
-            >> Reader.run
-            >> fun f -> services |> f)
+        |> Option.fold (fun _ ->
+            // id present - try to get record
+            TryParseUInt64
+            >> Option.fold (fun _ -> TryGetRecordFromHash) (None |> Reader.Return<_, _>))
+               // No id - get random, elevate to option
+               (GetRandomRecord() |> Reader.map Some)
+        // If the reader gets something, try to get its url.
+        // We know that the random record will always get something, and it will also always get a url
+        |> Reader.bind (Option.fold (fun _ -> GetRecordUrl >> Reader.map Some) (None |> Reader.Return<_, _>))
+        |> Reader.run
+        <| services
+        // If we have None here it must be 404, otherwise it get the page
         |> GenerateResponse
 
     [<assembly: LambdaSerializer(typeof<DefaultLambdaJsonSerializer>)>]
