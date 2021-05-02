@@ -35,6 +35,15 @@ let GenerateHtmlResponse (pageHtml: XmlNode) =
 
     async { return APIGatewayProxyResponse(Body = body, StatusCode = 200, Headers = headers) }
 
+let TryGetRecordFromHash (_hash: uint64) =
+    let conditions =
+        ScanCondition("Hash", ScanOperator.Equal, _hash :> obj)
+        |> Array.singleton
+
+    conditions
+    |> GetTableContents
+    |> Reader.map Seq.tryHead
+    
 let GetRandomRecord () =
     let conditions = [||]
 
@@ -47,16 +56,10 @@ let GenerateRandomPage () =
     |> Reader.bind GeneratePage
     |> Reader.map GenerateHtmlResponse
 
-let GetPageFromHash (_hash: uint64) =
-    let conditions =
-        ScanCondition("Hash", ScanOperator.Equal, _hash :> obj)
-        |> Array.singleton
-
-    conditions
-    |> GetTableContents
-    |> Reader.map Seq.tryHead
-    |> Reader.bind TryGeneratePage
-    |> Reader.map GenerateHtmlResponse
+let GetPageFromHash =
+    TryGetRecordFromHash
+    >> Reader.bind TryGeneratePage
+    >> Reader.map GenerateHtmlResponse
 
 let TryGetPageFromHash: uint64 option -> Reader<IServices, Async<APIGatewayProxyResponse>> =
     Option.fold (fun _ -> GetPageFromHash) (``404 Page`` |> Reader.map GenerateHtmlResponse)
