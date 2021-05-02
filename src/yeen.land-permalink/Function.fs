@@ -15,12 +15,7 @@ module Function =
     let FunctionHandler (request: APIGatewayProxyRequest) (_: ILambdaContext) =
         let services =
             new Service(RegionEndpoint.EUWest2) :> IServices
-            
-        let tryParseUInt64 (str: string) =
-            match UInt64.TryParse str with
-            | true, i -> Some i
-            | false, _ -> None
-            
+
         printfn "%A" request.Path
         printfn "%A" request.PathParameters
 
@@ -28,7 +23,7 @@ module Function =
         |> Seq.map (fun kvp -> kvp.Key, kvp.Value)
         |> Map.ofSeq
         |> Map.tryFind "id"
-        |> Option.bind tryParseUInt64
+        |> Option.bind TryParseUInt64
         |> TryGetPageFromHash
         |> Reader.run
         <| services
