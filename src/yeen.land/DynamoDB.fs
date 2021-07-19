@@ -9,7 +9,7 @@ open yeenland.Services
 let TableName = "yeen.land"
 
 [<DynamoDBTable(TableName)>]
-[<StructuredFormatDisplay("{AsString}")>]
+[<StructuredFormatDisplay("{StructuredFormatDisplay}")>]
 type YeenLand() =
     [<DynamoDBHashKey>]
     member val S3Key: string = "" with get, set
@@ -21,7 +21,7 @@ type YeenLand() =
 
     override this.ToString() = this.AsRecord.ToString()
 
-    member this.AsString = this.ToString()
+    member this.StructuredFormatDisplay = this.ToString()
 
 and [<Struct>] YeenLandRecord =
     { S3Key: string
