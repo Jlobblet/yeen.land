@@ -4,7 +4,8 @@ open Giraffe.ViewEngine
 open FSharpPlus.Data
 open yeenland.DynamoDB
 
-let css = """
+let css =
+    """
 body {
     font-family: sans-serif;
 }
@@ -43,9 +44,7 @@ let GeneratePage (yl: YeenLandRecord) =
                 meta [ _property "og:image"
                        _content imgSrc ]
                 title [] [ str "yeen.land" ]
-                style [] [
-                    str css
-                ]
+                style [] [ str css ]
             ]
             main [] [
                 div [ _class "imgbox" ] [
@@ -63,14 +62,13 @@ let GeneratePage (yl: YeenLandRecord) =
 
 let ``404 Page`` =
     let random = "https://yeen.land"
+
     html [] [
         head [] [
             title [] [ str "yeen.land" ]
             meta [ _property "og:type"
                    _content "website" ]
-            style [] [
-                str css
-            ]
+            style [] [ str css ]
         ]
         main [] [
             div [ _class "center-text" ] [
@@ -83,5 +81,5 @@ let ``404 Page`` =
     ]
     |> Reader.Return<_, _>
 
-let TryGeneratePage: YeenLandRecord option -> Reader<Services.IServices,XmlNode> =
+let TryGeneratePage: YeenLandRecord option -> Reader<Services.IServices, XmlNode> =
     Option.fold (fun _ -> GeneratePage) ``404 Page``

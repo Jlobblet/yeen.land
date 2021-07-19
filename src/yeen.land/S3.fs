@@ -39,7 +39,7 @@ let GetBucketContents (request: ListObjectsV2Request) =
 
 let GetObjectUrl bucketName objectKey =
     let inner (services: IServices) =
-        sprintf "https://s3.%s.amazonaws.com/%s/%s" services.Region.SystemName bucketName objectKey
+        $"https://s3.%s{services.Region.SystemName}.amazonaws.com/%s{bucketName}/%s{objectKey}"
 
     inner |> Reader
 

@@ -17,7 +17,7 @@ type YeenLand() =
     member val Hash: uint64 = 0uL with get, set
 
     member this.AsRecord = { S3Key = this.S3Key; Hash = this.Hash }
-    static member FromRecord { S3Key = s3Key; Hash = hash } = YeenLand(S3Key = s3Key, Hash = hash)
+    static member FromRecord{ S3Key = s3Key; Hash = hash } = YeenLand(S3Key = s3Key, Hash = hash)
 
     override this.ToString() = this.AsRecord.ToString()
 

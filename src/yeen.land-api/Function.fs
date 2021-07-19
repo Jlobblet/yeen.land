@@ -24,16 +24,20 @@ module Function =
 
         let body, statusCode =
             url
-            |> Option.map (fun u ->
-                let body = [ "url", u ] |> ToDictionary
-                let statusCode = 200
-                body, statusCode)
+            |> Option.map
+                (fun u ->
+                    let body = [ "url", u ] |> ToDictionary
+                    let statusCode = 200
+                    body, statusCode)
             |> Option.defaultValue ``404``
 
         async {
             return
-                APIGatewayProxyResponse
-                    (Body = JsonConvert.SerializeObject body, StatusCode = statusCode, Headers = headers)
+                APIGatewayProxyResponse(
+                    Body = JsonConvert.SerializeObject body,
+                    StatusCode = statusCode,
+                    Headers = headers
+                )
         }
         |> Async.StartAsTask
 
@@ -48,12 +52,13 @@ module Function =
 
         pathParameters
         |> Map.tryFind "id"
-        |> Option.fold (fun _ ->
-            // id present - try to get record
-            TryParseUInt64
-            >> Option.fold (fun _ -> TryGetRecordFromHash) (None |> Reader.Return<_, _>))
-               // No id - get random, elevate to option
-               (GetRandomRecord() |> Reader.map Some)
+        |> Option.fold
+            (fun _ ->
+                // id present - try to get record
+                TryParseUInt64
+                >> Option.fold (fun _ -> TryGetRecordFromHash) (None |> Reader.Return<_, _>))
+            // No id - get random, elevate to option
+            (GetRandomRecord() |> Reader.map Some)
         // If the reader gets something, try to get its url.
         // We know that the random record will always get something, and it will also always get a url
         |> Reader.bind (Option.fold (fun _ -> GetRecordUrl >> Reader.map Some) (None |> Reader.Return<_, _>))

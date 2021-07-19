@@ -43,7 +43,7 @@ let TryGetRecordFromHash (_hash: uint64) =
     conditions
     |> GetTableContents
     |> Reader.map Seq.tryHead
-    
+
 let GetRandomRecord () =
     let conditions = [||]
 

@@ -16,8 +16,8 @@ module Function =
         let services =
             new Service(RegionEndpoint.EUWest2) :> IServices
 
-        printfn "%A" request.Path
-        printfn "%A" request.PathParameters
+        printfn $"%A{request.Path}"
+        printfn $"%A{request.PathParameters}"
 
         request.PathParameters
         |> Seq.map (fun kvp -> kvp.Key, kvp.Value)

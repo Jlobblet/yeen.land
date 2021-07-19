@@ -19,24 +19,26 @@ module Function =
         let services =
             new Service(RegionEndpoint.EUWest2) :> IServices
 
-        if event.Records = null then failwith "Records is null - exiting"
+        if event.Records = null then
+            failwith "Records is null - exiting"
 
         let (deleteItems, addToDatabaseItems) =
             event.Records
-            |> Seq.map (fun r ->
-                async {
-                    let key = r.S3.Object.Key
-                    let! imageHash = Reader.run (GetImageHashFromS3 BucketName key) services
+            |> Seq.map
+                (fun r ->
+                    async {
+                        let key = r.S3.Object.Key
+                        let! imageHash = Reader.run (GetImageHashFromS3 BucketName key) services
 
-                    let conditions =
-                        ScanCondition("Hash", ScanOperator.Equal, imageHash :> obj)
-                        |> Array.singleton
+                        let conditions =
+                            ScanCondition("Hash", ScanOperator.Equal, imageHash :> obj)
+                            |> Array.singleton
 
-                    let collisions =
-                        Reader.run (GetTableContents conditions) services
+                        let collisions =
+                            Reader.run (GetTableContents conditions) services
 
-                    return { S3Key = key; Hash = imageHash }, collisions
-                })
+                        return { S3Key = key; Hash = imageHash }, collisions
+                    })
             |> Async.Parallel
             |> Async.RunSynchronously
             |> Array.partition (snd >> Seq.isEmpty >> not)
@@ -44,12 +46,13 @@ module Function =
 
         if not << Seq.isEmpty <| addToDatabaseItems then
             addToDatabaseItems
-            |> Array.map (fun yl ->
-                context.Logger.LogLine
-                <| sprintf "Adding database entry %A" yl
+            |> Array.map
+                (fun yl ->
+                    context.Logger.LogLine
+                    <| $"Adding database entry %A{yl}"
 
-                services.DynamoDBContext.SaveAsync<YeenLand>(yl.AsDynamo)
-                |> Async.AwaitTask)
+                    services.DynamoDBContext.SaveAsync<YeenLand>(yl.AsDynamo)
+                    |> Async.AwaitTask)
             |> Async.Parallel
             |> Async.RunSynchronously
             |> ignore
@@ -59,16 +62,17 @@ module Function =
                 DeleteObjectsRequest(BucketName = BucketName)
 
             deleteItems
-            |> Array.iter (fun (yl, cs) ->
-                context.Logger.LogLine
-                <| sprintf "Deleting object %s (collisions: %A)" yl.S3Key cs
+            |> Array.iter
+                (fun (yl, cs) ->
+                    context.Logger.LogLine
+                    <| $"Deleting object %s{yl.S3Key} (collisions: %A{cs})"
 
-                deleteRequest.AddKey yl.S3Key)
+                    deleteRequest.AddKey yl.S3Key)
 
             services.S3.DeleteObjectsAsync deleteRequest
             |> Async.AwaitTask
             |> Async.RunSynchronously
             |> ignore
 
-    [<assembly:LambdaSerializer(typeof<DefaultLambdaJsonSerializer>)>]
+    [<assembly: LambdaSerializer(typeof<DefaultLambdaJsonSerializer>)>]
     do ()
