@@ -23,7 +23,7 @@ type YeenLand() =
 
     member this.AsString = this.ToString()
 
-and YeenLandRecord =
+and [<Struct>] YeenLandRecord =
     { S3Key: string
       Hash: uint64 }
 
