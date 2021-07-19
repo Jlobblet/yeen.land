@@ -47,8 +47,11 @@ module Function =
 
         let pathParameters =
             request.PathParameters
-            |> Seq.map (fun kvp -> kvp.Key, kvp.Value)
-            |> Map.ofSeq
+            |> Option.ofObj
+            |> Option.fold (fun _ ->
+                (Seq.map (fun kvp -> kvp.Key, kvp.Value)
+                 >> Map.ofSeq))
+                Map.empty
 
         pathParameters
         |> Map.tryFind "id"
