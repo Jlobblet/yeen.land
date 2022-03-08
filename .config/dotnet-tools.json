@@ -3,13 +3,13 @@
   "isRoot": true,
   "tools": {
     "fantomas-tool": {
-      "version": "4.5.0",
+      "version": "4.7.0",
       "commands": [
         "fantomas"
       ]
     },
     "amazon.lambda.tools": {
-      "version": "5.1.0",
+      "version": "5.3.0",
       "commands": [
         "dotnet-lambda"
       ]
