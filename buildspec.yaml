@@ -3,8 +3,7 @@ version: 0.2
 env:
   shell: bash
   variables:
-    SOLUTION: .\yeen.land.sln
-    PACKAGE_DIRECTORY: .\packages
+    DOTNET_NOLOGO: 1
 
 phases:
   install:
