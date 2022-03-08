@@ -27,8 +27,7 @@ type Arguments =
             | RegionName _ -> "Region name the bucket is in"
             | Patterns _ -> "Glob patterns of files to upload"
 
-let parser =
-    ArgumentParser.Create<Arguments>(programName = name)
+let parser = ArgumentParser.Create<Arguments>(programName = name)
 
 if argv |> Array.isEmpty then
     parser.PrintUsage() |> printfn "%s"
@@ -47,8 +46,7 @@ let region =
     results.GetResult(<@ RegionName @>, defaultValue = "eu-west-2")
     |> parseRegionName
 
-let bucketName =
-    results.GetResult(<@ BucketName @>, defaultValue = "yeen.land")
+let bucketName = results.GetResult(<@ BucketName @>, defaultValue = "yeen.land")
 
 let patterns = results.GetResult(<@ Patterns @>)
 

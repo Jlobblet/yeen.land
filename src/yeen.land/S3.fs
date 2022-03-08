@@ -29,8 +29,7 @@ let GetBucketContents (request: ListObjectsV2Request) =
 
         let tok = request.ContinuationToken
 
-        let s =
-            Seq.unfold generator (Some request) |> Seq.concat
+        let s = Seq.unfold generator (Some request) |> Seq.concat
         // Reset the request to how we found it
         request.ContinuationToken <- tok
         s
@@ -49,8 +48,7 @@ let GetTempFilepath bucketName =
 let DownloadFile bucket key =
     let inner (services: IServices) =
         async {
-            let getRequest =
-                GetObjectRequest(BucketName = bucket, Key = key)
+            let getRequest = GetObjectRequest(BucketName = bucket, Key = key)
 
             let! getResponse =
                 services.S3.GetObjectAsync getRequest

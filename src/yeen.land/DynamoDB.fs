@@ -27,8 +27,7 @@ and [<Struct>] YeenLandRecord =
     { S3Key: string
       Hash: uint64 }
 
-    member this.AsDynamo =
-        YeenLand(S3Key = this.S3Key, Hash = this.Hash)
+    member this.AsDynamo = YeenLand(S3Key = this.S3Key, Hash = this.Hash)
 
     static member FromDynamo(yl: YeenLand) = { S3Key = yl.S3Key; Hash = yl.Hash }
 

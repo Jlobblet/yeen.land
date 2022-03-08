@@ -27,11 +27,9 @@ let GetRandomBucketItem request =
 
 
 let GenerateHtmlResponse (pageHtml: XmlNode) =
-    let body =
-        pageHtml |> RenderView.AsString.htmlDocument
+    let body = pageHtml |> RenderView.AsString.htmlDocument
 
-    let headers =
-        [ ("Content-Type", "text/html") ] |> ToDictionary
+    let headers = [ ("Content-Type", "text/html") ] |> ToDictionary
 
     async { return APIGatewayProxyResponse(Body = body, StatusCode = 200, Headers = headers) }
 

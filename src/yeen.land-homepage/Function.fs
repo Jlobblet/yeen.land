@@ -10,8 +10,7 @@ open yeenland.yeenland
 
 module Function =
     let FunctionHandler (_: APIGatewayProxyRequest) (_: ILambdaContext) =
-        let services =
-            new Service(RegionEndpoint.EUWest2) :> IServices
+        let services = new Service(RegionEndpoint.EUWest2) :> IServices
 
         GenerateRandomPage() |> Reader.run <| services
         |> Async.StartAsTask

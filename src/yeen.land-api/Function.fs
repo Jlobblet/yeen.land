@@ -24,11 +24,10 @@ module Function =
 
         let body, statusCode =
             url
-            |> Option.map
-                (fun u ->
-                    let body = [ "url", u ] |> ToDictionary
-                    let statusCode = 200
-                    body, statusCode)
+            |> Option.map (fun u ->
+                let body = [ "url", u ] |> ToDictionary
+                let statusCode = 200
+                body, statusCode)
             |> Option.defaultValue ``404``
 
         async {
@@ -42,15 +41,15 @@ module Function =
         |> Async.StartAsTask
 
     let FunctionHandler (request: APIGatewayProxyRequest) (_: ILambdaContext) =
-        let services =
-            new Service(RegionEndpoint.EUWest2) :> IServices
+        let services = new Service(RegionEndpoint.EUWest2) :> IServices
 
         let pathParameters =
             request.PathParameters
             |> Option.ofObj
-            |> Option.fold (fun _ ->
-                (Seq.map (fun kvp -> kvp.Key, kvp.Value)
-                 >> Map.ofSeq))
+            |> Option.fold
+                (fun _ ->
+                    (Seq.map (fun kvp -> kvp.Key, kvp.Value)
+                     >> Map.ofSeq))
                 Map.empty
 
         pathParameters
