@@ -17,16 +17,10 @@ phases:
   build:
     commands:
       - echo Running build tasks...
-      - pushd src/yeen.land-api/
-      - dotnet lambda deploy-function
-      - popd
-      - pushd src/yeen.land-homepage/
-      - dotnet lambda deploy-function
-      - popd
-      - pushd src/yeen.land-on-s3-push/
-      - dotnet lambda deploy-function
-      - pushd src/yeen.land-permalink/
-      - dotnet lambda deploy-function
+      - cd src/yeen.land-api/ && dotnet lambda deploy-function
+      - cd src/yeen.land-homepage/ && dotnet lambda deploy-function
+      - cd src/yeen.land-on-s3-push/ && dotnet lambda deploy-function
+      - cd src/yeen.land-permalink/ && dotnet lambda deploy-function
     finally:
       - echo Build phase complete
       
