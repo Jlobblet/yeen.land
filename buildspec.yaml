@@ -9,20 +9,14 @@ env:
 phases:
   install:
     commands:
-      - echo Installing dependencies...
       - /usr/local/bin/dotnet-install.sh --channel 6.0
       - dotnet tool restore
-    finally:
-      - echo Install phase complete
   build:
     commands:
-      - echo Running build tasks...
       - cd src/yeen.land-api/ && dotnet lambda deploy-function
       - cd src/yeen.land-homepage/ && dotnet lambda deploy-function
       - cd src/yeen.land-on-s3-push/ && dotnet lambda deploy-function
       - cd src/yeen.land-permalink/ && dotnet lambda deploy-function
-    finally:
-      - echo Build phase complete
       
 artifacts:
   files:
