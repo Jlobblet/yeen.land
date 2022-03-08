@@ -10,16 +10,13 @@ phases:
   install:
     commands:
       - echo Installing dependencies...
-      - wget https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-      - dpkg -i packages-microsoft-prod.deb
-      - apt-get update -y
-      - apt-get install -y apt-transport-https dotnet-sdk-6.0
+      - /usr/local/bin/dotnet-install.sh --channel 6.0
+      - dotnet tool restore
     finally:
       - echo Install phase complete
   build:
     commands:
       - echo Running build tasks...
-      - dotnet tool restore
       - pushd src/yeen.land-api/
       - dotnet lambda deploy-function
       - popd
