@@ -13,27 +13,29 @@ phases:
       - wget https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
       - dpkg -i packages-microsoft-prod.deb
       - apt-get update -y
-      - apt-get install -y apt-transport-https dotnet-sdk-5.0
+      - apt-get install -y apt-transport-https dotnet-sdk-6.0
     finally:
       - echo Install phase complete
   build:
     commands:
       - echo Running build tasks...
       - dotnet tool restore
-      - cd ./src/yeen.land-api/
+      - pushd src/yeen.land-api/
       - dotnet lambda deploy-function
-      - cd ../yeen.land-homepage/
+      - popd
+      - pushd src/yeen.land-homepage/
       - dotnet lambda deploy-function
-      - cd ../yeen.land-on-s3-push/
+      - popd
+      - pushd src/yeen.land-on-s3-push/
       - dotnet lambda deploy-function
-      - cd ../yeen.land-permalink/
+      - pushd src/yeen.land-permalink/
       - dotnet lambda deploy-function
     finally:
       - echo Build phase complete
       
 artifacts:
   files:
-    - ./src/yeen.land-api/bin/Release/netcoreapp3.1/yeen.land-api.zip
-    - ./src/yeen.land-homepage/bin/Release/netcoreapp3.1/yeen.land-homepage.zip
-    - ./src/yeen.land-on-s3-push/bin/Release/netcoreapp3.1/yeen.land-on-s3-push.zip
-    - ./src/yeen.land-permalink/bin/Release/netcoreapp3.1/yeen.land-permalink.zip
+    - ./src/yeen.land-api/bin/Release/net6.0/yeen.land-api.zip
+    - ./src/yeen.land-homepage/bin/Release/net6.0/yeen.land-homepage.zip
+    - ./src/yeen.land-on-s3-push/bin/Release/net6.0/yeen.land-on-s3-push.zip
+    - ./src/yeen.land-permalink/bin/Release/net6.0/yeen.land-permalink.zip

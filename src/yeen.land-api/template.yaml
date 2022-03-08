@@ -6,7 +6,7 @@ Resources:
     Type: 'AWS::Serverless::Function'
     Properties:
       Handler: 'yeen.land-api::yeenland_api.Function::FunctionHandler'
-      Runtime: dotnetcore3.1
+      Runtime: dotnet6
       CodeUri: .
       Description: ''
       MemorySize: 256
